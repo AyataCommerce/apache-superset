@@ -642,6 +642,7 @@ Resources:
       DeploymentController:
         Type: ECS
       DesiredCount: 1
+      EnableExecuteCommand: true
       LaunchType: FARGATE
       LoadBalancers:
       - ContainerName: superset
@@ -775,7 +776,7 @@ Resources:
         - Name: InstallProphet
           Value: !Ref InstallProphet
         Essential: true
-        Image: public.ecr.aws/p9r6s5p7/superset:v2.0.0
+        Image: public.ecr.aws/a7i8x0s2/apache-superset:v2.1.0
         LinuxParameters: {}
         LogConfiguration:
           LogDriver: awslogs
@@ -848,6 +849,10 @@ Resources:
       ManagedPolicyArns:
       - !Sub arn:${AWS::Partition}:iam::aws:policy/AmazonS3FullAccess
       - !Sub arn:${AWS::Partition}:iam::aws:policy/AmazonAthenaFullAccess
+      - !Sub arn:${AWS::Partition}:iam::aws:policy/AmazonSSMFullAccess
+      - !Sub arn:${AWS::Partition}:iam::aws:policy/AmazonSSMManagedInstanceCore
+      - !Sub arn:${AWS::Partition}:iam::aws:policy/AmazonSSMManagedEC2InstanceDefaultPolicy
+      - !Sub arn:${AWS::Partition}:iam::aws:policy/AWSCloud9SSMInstanceProfile
       Policies:
       - PolicyDocument:
           Statement:
@@ -1032,7 +1037,7 @@ Resources:
         - Name: SUPERSET_PASSWORD
           Value: !Ref UserPassword
         Essential: false
-        Image: public.ecr.aws/p9r6s5p7/superset:v2.0.0
+        Image: public.ecr.aws/a7i8x0s2/apache-superset:v2.1.0
         LinuxParameters: {}
         LogConfiguration:
           LogDriver: awslogs
@@ -1477,7 +1482,7 @@ Resources:
         - Name: SUPERSET_PASSWORD
           Value: !Ref UserPassword
         Essential: true
-        Image: public.ecr.aws/p9r6s5p7/superset:v2.0.0
+        Image: public.ecr.aws/a7i8x0s2/apache-superset:v2.1.0
         LinuxParameters: {}
         LogConfiguration:
           LogDriver: awslogs
@@ -1691,7 +1696,7 @@ Resources:
         - Name: SUPERSET_PASSWORD
           Value: !Ref UserPassword
         Essential: true
-        Image: public.ecr.aws/p9r6s5p7/superset:v2.0.0
+        Image: public.ecr.aws/a7i8x0s2/apache-superset:v2.1.0
         LinuxParameters: {}
         LogConfiguration:
           LogDriver: awslogs
@@ -1784,7 +1789,7 @@ Resources:
   SuperDashboard:
     Type: 'AWS::CloudWatch::Dashboard'
     Properties:
-      DashboardBody: !Join 
+      DashboardBody: !Join
         - ''
         - - |-
             {
@@ -1798,29 +1803,29 @@ Resources:
                         "properties": {
                             "metrics": [
                                 [ "AWS/ECS", "MemoryUtilization", "ServiceName", "
-          - !GetAtt 
+          - !GetAtt
             - SupersetworkerbeatService
             - Name
           - '", "ClusterName", "'
           - !Ref Cluster
           - '", { "stat": "Average" } ],[ "...", "'
-          - !GetAtt 
+          - !GetAtt
             - SupersetworkerService
             - Name
           - '", ".", ".", { "stat": "Average" } ],[ "...", "'
-          - !GetAtt 
+          - !GetAtt
             - RedisService
             - Name
           - '", ".", ".", { "stat": "Average" } ],[ "...", "'
-          - !GetAtt 
+          - !GetAtt
             - DbService
             - Name
           - '", ".", ".", { "stat": "Average" } ],[ "...", "'
-          - !GetAtt 
+          - !GetAtt
             - SupersetnodeService
             - Name
           - '", ".", ".", { "stat": "Average" } ],[ "...", "'
-          - !GetAtt 
+          - !GetAtt
             - SupersetService
             - Name
           - >-
@@ -1851,29 +1856,29 @@ Resources:
                         "properties": {
                             "metrics": [
                                 [ "AWS/ECS", "CPUUtilization", "ServiceName", "
-          - !GetAtt 
+          - !GetAtt
             - SupersetworkerService
             - Name
           - '", "ClusterName", "'
           - !Ref Cluster
           - '" ],[ "...", "'
-          - !GetAtt 
+          - !GetAtt
             - SupersetworkerbeatService
             - Name
           - '", ".", "." ],[ "...", "'
-          - !GetAtt 
+          - !GetAtt
             - RedisService
             - Name
           - '", ".", "." ],[ "...", "'
-          - !GetAtt 
+          - !GetAtt
             - DbService
             - Name
           - '", ".", "." ],[ "...", "'
-          - !GetAtt 
+          - !GetAtt
             - SupersetnodeService
             - Name
           - '", ".", "." ],[ "...", "'
-          - !GetAtt 
+          - !GetAtt
             - SupersetService
             - Name
           - |-
@@ -1898,7 +1903,7 @@ Resources:
                         "properties": {
                             "metrics": [
                                 [ "AWS/ECS", "CPUUtilization", "ServiceName", "
-          - !GetAtt 
+          - !GetAtt
             - SupersetworkerService
             - Name
           - '", "ClusterName", "'
@@ -1906,27 +1911,27 @@ Resources:
           - >-
             ", { "stat": "SampleCount", "yAxis": "left", "period": 60 } ],[
             "...", "
-          - !GetAtt 
+          - !GetAtt
             - SupersetnodeService
             - Name
           - '", ".", ".", { "period": 60, "stat": "SampleCount" } ],[ "...", "'
-          - !GetAtt 
+          - !GetAtt
             - DbService
             - Name
           - '", ".", ".", { "period": 60, "stat": "SampleCount" } ],[ "...", "'
-          - !GetAtt 
+          - !GetAtt
             - RedisService
             - Name
           - |-
             ", ".", ".", { "period": 60, "stat": "SampleCount" } ],
                                 [ "...", "
-          - !GetAtt 
+          - !GetAtt
             - SupersetService
             - Name
           - |-
             ", ".", ".", { "period": 60, "stat": "SampleCount" } ],
                                 [ "...", "
-          - !GetAtt 
+          - !GetAtt
             - SupersetworkerbeatService
             - Name
           - |-
@@ -2055,22 +2060,22 @@ Resources:
                       "properties": {
                           "metrics": [
                               [ "AWS/NetworkELB", "HealthyHostCount", "TargetGroup", "
-          - !GetAtt 
+          - !GetAtt
             - SupersetTCP8088TargetGroup
             - TargetGroupFullName
           - '", "AvailabilityZone", "'
-          - !Select 
+          - !Select
             - 0
             - !GetAZs ''
           - '", "LoadBalancer", "'
-          - !GetAtt 
+          - !GetAtt
             - LoadBalancer
             - LoadBalancerFullName
           - >-
             ", { "stat": "Minimum" } ],[ ".", "UnHealthyHostCount", ".", ".",
             ".", ".", ".", ".", { "stat": "Maximum" } ], [ ".",
             "HealthyHostCount", ".", ".", ".", "
-          - !Select 
+          - !Select
             - 1
             - !GetAZs ''
           - >-
