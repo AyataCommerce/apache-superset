@@ -1,0 +1,6 @@
+redis==4.5.4
+psycopg2==2.9.7
+psycopg2-binary==2.9.7
+sqlalchemy-cockroachdb==2.0.1
+gunicorn==21.2.0
+gevent==23.7.0

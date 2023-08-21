@@ -158,6 +158,7 @@ Resources:
     Type: AWS::ElasticLoadBalancingV2::LoadBalancer
   LogGroup:
     Properties:
+      RetentionInDays: 7
       LogGroupName:
         !Sub
           - /docker-compose/${ClusterName}-${StackID}
@@ -776,7 +777,7 @@ Resources:
         - Name: InstallProphet
           Value: !Ref InstallProphet
         Essential: true
-        Image: public.ecr.aws/a7i8x0s2/apache-superset:v2.1.0
+        Image: public.ecr.aws/a7i8x0s2/apache-superset:v2.1.0-prd
         LinuxParameters: {}
         LogConfiguration:
           LogDriver: awslogs
@@ -1037,7 +1038,7 @@ Resources:
         - Name: SUPERSET_PASSWORD
           Value: !Ref UserPassword
         Essential: false
-        Image: public.ecr.aws/a7i8x0s2/apache-superset:v2.1.0
+        Image: public.ecr.aws/a7i8x0s2/apache-superset:v2.1.0-prd
         LinuxParameters: {}
         LogConfiguration:
           LogDriver: awslogs
@@ -1482,7 +1483,7 @@ Resources:
         - Name: SUPERSET_PASSWORD
           Value: !Ref UserPassword
         Essential: true
-        Image: public.ecr.aws/a7i8x0s2/apache-superset:v2.1.0
+        Image: public.ecr.aws/a7i8x0s2/apache-superset:v2.1.0-prd
         LinuxParameters: {}
         LogConfiguration:
           LogDriver: awslogs
@@ -1696,7 +1697,7 @@ Resources:
         - Name: SUPERSET_PASSWORD
           Value: !Ref UserPassword
         Essential: true
-        Image: public.ecr.aws/a7i8x0s2/apache-superset:v2.1.0
+        Image: public.ecr.aws/a7i8x0s2/apache-superset:v2.1.0-prd
         LinuxParameters: {}
         LogConfiguration:
           LogDriver: awslogs
